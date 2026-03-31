@@ -1,4 +1,4 @@
-import 'express-async-errors';
+﻿import 'express-async-errors';
 import express from 'express';
 import request from 'supertest';
 import { buildAuthRouter } from '../../modules/auth/auth.routes';
@@ -48,6 +48,7 @@ describe('Auth routes', () => {
     });
 
     expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty('accessToken');
+    expect(response.body).toEqual({ message: 'Registration successful' });
+    expect(response.headers['set-cookie']).toBeDefined();
   });
 });

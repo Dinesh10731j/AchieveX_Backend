@@ -1,0 +1,38 @@
+﻿export const Message = {
+  INTERNAL_SERVER_ERROR: 'Internal server error',
+  SUCCESS: 'Operation completed successfully',
+  CREATED: 'Created successfully',
+  FETCHED: 'Fetched successfully',
+  UPDATED: 'Updated successfully',
+  DELETED: 'Deleted successfully',
+  NOT_FOUND: 'Not found',
+  ROUTE_NOT_FOUND: 'Route not found',
+  HEALTH_OK: 'ok',
+
+  USER_ALREADY_EXISTS: 'User already exists',
+  USER_NOT_FOUND: 'User not found',
+  USER_CREATED_SUCCESS: 'User created successfully',
+  USER_UPDATED_SUCCESS: 'User updated successfully',
+  USER_DELETED_SUCCESS: 'User deleted successfully',
+
+  INVALID_EMAIL_OR_PASSWORD: 'Invalid email or password',
+  LOGIN_SUCCESS: 'Login successful',
+  REGISTER_SUCCESS: 'Registration successful',
+  REFRESH_SUCCESS: 'Token refreshed successfully',
+  LOGOUT_SUCCESS: 'Logged out successfully',
+  UNAUTHORIZED: 'Unauthorized access',
+  FORBIDDEN: 'Forbidden',
+  ACCESS_TOKEN_MISSING: 'Token expired. Please login again',
+  INVALID_TOKEN_PAYLOAD: 'Invalid token payload',
+  INVALID_OR_EXPIRED_TOKEN: 'Invalid or expired token. Please login!',
+  FORBIDDEN_ROLE: 'Forbidden: insufficient role',
+  RESET_EMAIL_SENT: 'If the email exists, a reset link has been sent.',
+  RESET_TOKEN_INVALID: 'Reset token is invalid or expired',
+  PASSWORD_RESET_SUCCESS: 'Password has been reset successfully.',
+
+  INVALID_REQUEST: 'Invalid request data',
+  MISSING_FIELDS: 'Required fields are missing',
+  CAPTCHA_REQUIRED: 'Captcha token is required',
+  CAPTCHA_FAILED: 'Captcha verification failed',
+
+} as const;

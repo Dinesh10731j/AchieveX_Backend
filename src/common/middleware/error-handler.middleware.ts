@@ -1,4 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
+﻿import { NextFunction, Request, Response } from 'express';
+import { HTTP_STATUS } from '../../constant/statusCode.constant';
+import { Message } from '../../constant/message.constant';
 import { AppError } from '../errors';
 import { logger } from '../utils/logger';
 
@@ -17,7 +19,7 @@ export const errorHandler = (
   }
 
   logger.error('Unhandled error', { message: error.message, stack: error.stack });
-  res.status(500).json({
-    message: 'Internal server error'
+  res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+    message: Message.INTERNAL_SERVER_ERROR
   });
 };

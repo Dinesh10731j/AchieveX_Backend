@@ -1,4 +1,6 @@
-import { Request, Response } from 'express';
+﻿import { Request, Response } from 'express';
+import { Message } from '../../constant/message.constant';
+import { HTTP_STATUS } from '../../constant/statusCode.constant';
 import { ReactionService } from './reaction.service';
 import { CreateReactionDto } from './reaction.dto';
 
@@ -9,8 +11,8 @@ export class ReactionController {
     req: Request<unknown, unknown, CreateReactionDto>,
     res: Response
   ): Promise<void> => {
-    const data = await this.reactionService.create(req.auth!.userId, req.body);
-    res.status(201).json(data);
+    await this.reactionService.create(req.auth!.userId, req.body);
+    res.status(HTTP_STATUS.CREATED).json({ message: Message.CREATED });
   };
 
   public remove = async (
@@ -18,6 +20,6 @@ export class ReactionController {
     res: Response
   ): Promise<void> => {
     await this.reactionService.remove(req.auth!.userId, req.body);
-    res.status(204).send();
+    res.status(HTTP_STATUS.NO_CONTENT).send();
   };
 }

@@ -1,9 +1,11 @@
-import 'reflect-metadata';
+﻿import 'reflect-metadata';
 import 'express-async-errors';
 import path from 'path';
 import cors from 'cors';
 import express, { Express, Request, Response } from 'express';
 import helmet from 'helmet';
+import { Message } from './constant/message.constant';
+import { HTTP_STATUS } from './constant/statusCode.constant';
 import { AppContainer } from './container';
 import { env } from './config/env';
 import {
@@ -37,7 +39,7 @@ export const createApp = (container: AppContainer): Express => {
   app.use('/uploads', express.static(path.resolve(process.cwd(), env.uploadDir)));
 
   app.get('/health', (_req: Request, res: Response) => {
-    res.status(200).json({ status: 'ok' });
+    res.status(HTTP_STATUS.OK).json({ status: Message.HEALTH_OK });
   });
 
   const router = express.Router();
@@ -52,7 +54,7 @@ export const createApp = (container: AppContainer): Express => {
   app.use(env.apiPrefix, router);
 
   app.use((_req: Request, res: Response) => {
-    res.status(404).json({ message: 'Route not found' });
+    res.status(HTTP_STATUS.NOT_FOUND).json({ message: Message.ROUTE_NOT_FOUND });
   });
 
   app.use(errorHandler);
