@@ -1,6 +1,6 @@
-import { AppError, ForbiddenError, NotFoundError } from '../../common/errors';
+﻿import { AppError, ForbiddenError, NotFoundError } from '../../common/errors';
 import { uploadProofToCloudinary } from '../../common/utils/cloudinary-upload';
-import { ProofType } from '../../database/entities';
+import { ManifestationStatus, ProofType } from '../../database/entities';
 import { ManifestationRepository, ProofRepository } from '../../database/repositories';
 import { ManifestationService } from '../manifestation/manifestation.service';
 import { CreateProofDto } from './proof.dto';
@@ -29,8 +29,12 @@ export class ProofService {
       throw new ForbiddenError('You can only submit proof for your own manifestation');
     }
 
-    if (manifestation.deadline.getTime() < Date.now()) {
-      throw new AppError('Deadline has passed. Proof submission is closed.', 400);
+    if (manifestation.status !== ManifestationStatus.PENDING) {
+      throw new AppError('Proof upload is allowed only while manifestation is pending.', 400);
+    }
+
+    if (manifestation.deadline.getTime() <= Date.now()) {
+      throw new AppError('You can upload proof only before deadline.', 400);
     }
 
     const existingProof = await this.proofRepository.findByManifestationId(dto.manifestationId);
@@ -75,6 +79,11 @@ export class ProofService {
     });
 
     const saved = await this.proofRepository.save(proof);
+
+    manifestation.status = ManifestationStatus.ACHIEVED;
+    manifestation.achievedAt = new Date();
+    await this.manifestationRepository.save(manifestation);
+
     await this.manifestationService.recomputeConfidence(dto.manifestationId);
     return saved;
   }

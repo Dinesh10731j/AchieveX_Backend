@@ -1,4 +1,4 @@
-import { Job, Worker } from 'bullmq';
+﻿import { Job, Worker } from 'bullmq';
 import { QueueNames } from '../../config/bullmq';
 import { redisClient } from '../../config/redis';
 import { logger } from '../../common/utils/logger';
@@ -40,12 +40,16 @@ export const startReminderWorker = (notificationService: NotificationService): W
           return;
         }
 
-        const reminderLabel = job.data.reminderType === '1d' ? '1 day' : '1 hour';
+        const reminderMessage =
+          job.data.reminderType === '1d'
+            ? 'Hope you have achieved the target .'
+            : `Your goal "${manifestation.title}" reaches deadline in 1 hour.`;
+
         await notificationService.notify({
           userId: manifestation.userId,
           type: NotificationType.GOAL_REMINDER,
           title: 'Goal reminder',
-          message: `Your goal "${manifestation.title}" reaches deadline in ${reminderLabel}.`,
+          message: reminderMessage,
           data: {
             manifestationId: manifestation.id,
             reminderType: job.data.reminderType,

@@ -1,4 +1,4 @@
-import { deadlineQueue, reminderQueue, isBullMQReady } from '../../config/bullmq';
+﻿import { deadlineQueue, reminderQueue, isBullMQReady } from '../../config/bullmq';
 import { logger } from '../../common/utils/logger';
 
 export interface ReminderJobPayload {
@@ -9,6 +9,10 @@ export interface ReminderJobPayload {
 export interface DeadlineJobPayload {
   manifestationId: string;
 }
+
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const ONE_HOUR_MS = 60 * 60 * 1000;
+const DEADLINE_GRACE_PERIOD_MS = 5 * ONE_DAY_MS;
 
 export const scheduleManifestationJobs = async (
   manifestationId: string,
@@ -22,8 +26,9 @@ export const scheduleManifestationJobs = async (
   const now = Date.now();
   const deadlineMs = deadline.getTime();
 
-  const oneDayBefore = deadlineMs - 24 * 60 * 60 * 1000;
-  const oneHourBefore = deadlineMs - 60 * 60 * 1000;
+  const oneDayBefore = deadlineMs - ONE_DAY_MS;
+  const oneHourBefore = deadlineMs - ONE_HOUR_MS;
+  const deadlineCheckAt = deadlineMs + DEADLINE_GRACE_PERIOD_MS;
 
   if (oneDayBefore > now) {
     await reminderQueue.add(
@@ -51,8 +56,8 @@ export const scheduleManifestationJobs = async (
     'goal.deadline-check',
     { manifestationId } satisfies DeadlineJobPayload,
     {
-      delay: Math.max(0, deadlineMs - now),
-      jobId: `goal:${manifestationId}:deadline`
+      delay: Math.max(0, deadlineCheckAt - now),
+      jobId: `goal:${manifestationId}:deadline-plus-5d`
     }
   );
 };
