@@ -1,0 +1,8 @@
+import { AppError } from './app-error';
+
+export class ValidationError extends AppError {
+  constructor(message = 'Validation failed', details?: unknown) {
+    super(message, 400, details);
+    this.name = 'ValidationError';
+  }
+}
